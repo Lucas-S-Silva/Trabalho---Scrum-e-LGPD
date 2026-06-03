@@ -13,6 +13,34 @@ $sql = "SELECT * FROM cursos";
 
 $resultado = $conexao->query($sql);
 
+$mensagem = "";
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $usuario_id = $_SESSION['usuario_id'];
+    $curso_id = $_POST['curso_id'];
+
+    $verifica = "SELECT * FROM inscricoes
+             WHERE usuario_id = $usuario_id
+             AND curso_id = $curso_id";
+
+    $resultadoVerifica = $conexao->query($verifica);
+
+    if($resultadoVerifica->num_rows == 0){
+        $sqlInscricao = "INSERT INTO inscricoes
+                        (usuario_id, curso_id, progresso)
+                        VALUES
+                        ($usuario_id, $curso_id, 0)";
+        if($conexao->query($sqlInscricao)){
+            $mensagem = "Inscrição realizada com sucesso!";
+        }
+    }
+    else{
+        $mensagem = "Você já está inscrito neste curso!";
+    }
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +65,11 @@ $resultado = $conexao->query($sql);
             Bem-vindo,
             <?php echo $_SESSION['usuario']; ?>!
         </p>
+        <?php
+        if($mensagem != ""){
+            echo "<p class='sucesso'>$mensagem</p>";
+        }
+        ?>
 
         <br>
 
@@ -56,6 +89,19 @@ $resultado = $conexao->query($sql);
                         <?php echo $curso['descricao']; ?>
                     </p>
 
+                    <form method="POST">
+                        <input
+                            type="hidden"
+                            name="curso_id"
+                            value="<?php echo $curso['id']; ?>"
+                        >
+
+                        <button type="submit">
+                            Inscrever-se
+                        </button>
+
+                    </form>
+
                 </div>
 
             <?php
@@ -67,11 +113,23 @@ $resultado = $conexao->query($sql);
         <br>
 
         <div class="login-link">
+            <a href="meus_cursos.php" class="btn-cadastro">
+                Meus Cursos
+            </a>
+        </div>
 
+        <br>
+
+        <div class="login-link">
+            <a href="perfil.php" class="btn-cadastro">
+                Editar Perfil
+            </a>
+        </div>
+        <br>
+        <div class="login-link">
             <a href="logout.php" class="btn-cadastro">
                 Sair
             </a>
-
         </div>
 
     </div>

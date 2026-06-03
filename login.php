@@ -21,6 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         if(password_verify($senha, $usuario['senha'])){
 
+            $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario'] = $usuario['nome'];
 
             header("Location: cursos.php");
