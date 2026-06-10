@@ -24,6 +24,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario'] = $usuario['nome'];
 
+            $usuario_id = $usuario['id'];
+            $evento = "LOGIN";
+            $ip = $_SERVER['REMOTE_ADDR'];
+
+            $sqlLog = "INSERT INTO logs_autenticacao
+                    (usuario_id, evento, ip, data_hora)
+                    VALUES
+                    ($usuario_id, '$evento', '$ip', NOW())";
+
+            $conexao->query($sqlLog);
+
             header("Location: cursos.php");
             exit;
 

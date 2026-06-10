@@ -9,9 +9,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+    $consentimento_marketing = isset($_POST['consentimento_marketing']) ? 1 : 0;
 
-    $sql = "INSERT INTO usuarios (nome, email, senha)
-            VALUES ('$nome', '$email', '$senha')";
+        $sql = "INSERT INTO usuarios
+        (nome, email, senha, consentimento_marketing)
+        VALUES
+        ('$nome', '$email', '$senha', $consentimento_marketing)";
 
     if($conexao->query($sql) === TRUE){
         $mensagem = "Cadastro realizado com sucesso!";
@@ -67,6 +70,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 placeholder="Digite sua senha" 
                 required
             >
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="consentimento_marketing"
+                    value="1"
+                >
+                Desejo receber ofertas e novidades por e-mail.
+            </label>
 
             <br><br>
 

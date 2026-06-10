@@ -1,11 +1,9 @@
-plataforma_cursos
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20/05/2026 às 20:28
+-- Tempo de geração: 10/06/2026 às 21:02
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -47,6 +45,73 @@ INSERT INTO `cursos` (`id`, `nome`, `descricao`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `inscricoes`
+--
+
+CREATE TABLE `inscricoes` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `curso_id` int(11) NOT NULL,
+  `data_inscricao` datetime DEFAULT current_timestamp(),
+  `progresso` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `inscricoes`
+--
+
+INSERT INTO `inscricoes` (`id`, `usuario_id`, `curso_id`, `data_inscricao`, `progresso`) VALUES
+(1, 4, 1, '2026-06-02 21:22:22', 50),
+(2, 4, 2, '2026-06-02 21:23:53', 100),
+(3, 4, 3, '2026-06-02 21:29:53', 25);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `logs_autenticacao`
+--
+
+CREATE TABLE `logs_autenticacao` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `evento` varchar(100) NOT NULL,
+  `ip` varchar(50) NOT NULL,
+  `data_hora` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `logs_autenticacao`
+--
+
+INSERT INTO `logs_autenticacao` (`id`, `usuario_id`, `evento`, `ip`, `data_hora`) VALUES
+(1, 4, 'LOGIN', '::1', '2026-06-10 13:23:25'),
+(2, 4, 'LOGIN', '::1', '2026-06-10 13:26:47'),
+(3, 4, 'LOGOUT', '::1', '2026-06-10 13:26:50'),
+(4, 4, 'LOGIN', '::1', '2026-06-10 13:51:13'),
+(5, 4, 'LOGOUT', '::1', '2026-06-10 13:55:47'),
+(6, 4, 'LOGIN', '::1', '2026-06-10 13:55:52'),
+(7, 4, 'LOGOUT', '::1', '2026-06-10 13:55:56'),
+(8, 5, 'LOGIN', '::1', '2026-06-10 13:56:21'),
+(9, 5, 'LOGOUT', '::1', '2026-06-10 14:05:27'),
+(10, 4, 'LOGIN', '::1', '2026-06-10 14:05:33'),
+(11, 4, 'LOGOUT', '::1', '2026-06-10 14:05:37'),
+(12, 5, 'LOGIN', '::1', '2026-06-10 14:05:46'),
+(13, 5, 'LOGOUT', '::1', '2026-06-10 14:05:56'),
+(14, 5, 'LOGIN', '::1', '2026-06-10 14:50:10'),
+(15, 5, 'LOGOUT', '::1', '2026-06-10 14:50:17'),
+(16, 5, 'LOGIN', '::1', '2026-06-10 14:54:15'),
+(17, 5, 'LOGOUT', '::1', '2026-06-10 14:54:23'),
+(18, 5, 'LOGIN', '::1', '2026-06-10 14:55:30'),
+(19, 5, 'LOGOUT', '::1', '2026-06-10 14:55:57'),
+(20, 5, 'LOGIN', '::1', '2026-06-10 14:56:01'),
+(21, 5, 'LOGOUT', '::1', '2026-06-10 14:57:25'),
+(22, 5, 'LOGIN', '::1', '2026-06-10 14:57:30'),
+(23, 3, 'LOGIN', '::1', '2026-06-10 14:59:47'),
+(24, 6, 'LOGIN', '::1', '2026-06-10 15:00:33');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `usuarios`
 --
 
@@ -54,16 +119,18 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nome` varchar(150) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `senha` varchar(70) NOT NULL
+  `senha` varchar(70) NOT NULL,
+  `consentimento_marketing` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`) VALUES
-(1, 'Lucas', 'ls@es', '$2y$10$43a4EP8837iEBQTYXXMv0.ZucTaHTy80wiXaGmRP.VV/Wyja3QYvS'),
-(3, 'Paulo', 'pl@es', '$2y$10$G30jcby8cMzIQMPkb2AdienTw04go5eiFQ4uMeXd5yDZ2DpW0xVD2');
+INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `consentimento_marketing`) VALUES
+(1, 'Lucas', 'ls@es', '$2y$10$43a4EP8837iEBQTYXXMv0.ZucTaHTy80wiXaGmRP.VV/Wyja3QYvS', 0),
+(4, 'Eu', 'eu@es', '$2y$10$w7tQgXjzSiRQOkOeuHDDyuPH9Q8TuvRkKDyzMSM3jwnjOIrAK//na', 0),
+(7, 'Vini', 'vi@es', '$2y$10$rsgfB2x8z.UhuwRjUf5OpeQ8vOUcYrAR7VuqYN47xBRlkxOf1ZR4i', 0);
 
 --
 -- Índices para tabelas despejadas
@@ -73,6 +140,18 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`) VALUES
 -- Índices de tabela `cursos`
 --
 ALTER TABLE `cursos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `inscricoes`
+--
+ALTER TABLE `inscricoes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `logs_autenticacao`
+--
+ALTER TABLE `logs_autenticacao`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -86,22 +165,24 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de tabela `inscricoes`
+--
+ALTER TABLE `inscricoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de tabela `logs_autenticacao`
+--
+ALTER TABLE `logs_autenticacao`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-add stage 2:
-
-CREATE TABLE inscricoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    curso_id INT NOT NULL,
-    data_inscricao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    progresso INT DEFAULT 0
-);
